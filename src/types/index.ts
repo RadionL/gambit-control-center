@@ -8,6 +8,8 @@ export interface SystemHealth {
   battery: number;
   sat_fix: number;
   fps: number;
+  latitude?: number;
+  longitude?: number;
   status: 'HEALTHY' | 'WARNING' | 'CRITICAL';
   timestamp: string;
 }

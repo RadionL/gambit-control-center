@@ -8,6 +8,7 @@ import { useToast } from '@/hooks/use-toast';
 import { SystemHealth, Mission, Flight } from '@/types';
 import { apiService } from '@/services/api';
 import { wsService } from '@/services/websocket';
+import LocationMap from '@/components/ui/LocationMap';
 
 export function Dashboard() {
   const [health, setHealth] = useState<SystemHealth | null>(null);
@@ -168,7 +169,7 @@ export function Dashboard() {
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {/* System Health Card */}
         <Card className="metric-card">
           <CardHeader>
@@ -254,6 +255,33 @@ export function Dashboard() {
               <div className="flex items-center space-x-2 text-muted-foreground">
                 <AlertTriangle className="w-4 h-4" />
                 <span>No flight data available</span>
+              </div>
+          )}
+          </CardContent>
+        </Card>
+
+        {/* Location Map Card */}
+        <Card className="metric-card">
+          <CardHeader>
+            <CardTitle>Current Location</CardTitle>
+            <CardDescription>System position and navigation</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <LocationMap 
+              latitude={health?.latitude} 
+              longitude={health?.longitude}
+              className="w-full h-48"
+            />
+            {health?.latitude && health?.longitude && (
+              <div className="mt-3 text-xs text-muted-foreground grid grid-cols-2 gap-2">
+                <div>
+                  <span className="metric-label">Latitude</span>
+                  <div className="font-mono text-sm">{health.latitude.toFixed(6)}</div>
+                </div>
+                <div>
+                  <span className="metric-label">Longitude</span>
+                  <div className="font-mono text-sm">{health.longitude.toFixed(6)}</div>
+                </div>
               </div>
             )}
           </CardContent>
