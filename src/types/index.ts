@@ -10,8 +10,27 @@ export interface SystemHealth {
   fps: number;
   latitude?: number;
   longitude?: number;
+  altitude?: number;
+  heading?: number;
+  speed?: number;
   status: 'HEALTHY' | 'WARNING' | 'CRITICAL';
   timestamp: string;
+}
+
+export interface FlightPosition {
+  latitude: number;
+  longitude: number;
+  altitude: number;
+  heading: number;
+  speed: number;
+  timestamp: string;
+}
+
+export interface HomePosition {
+  latitude: number;
+  longitude: number;
+  altitude: number;
+  set: boolean;
 }
 
 export interface SystemIndicators {
@@ -23,6 +42,8 @@ export interface SystemIndicators {
   sat: number;
   fps: number;
   connected: boolean;
+  position?: FlightPosition;
+  home?: HomePosition;
 }
 
 export interface Mission {

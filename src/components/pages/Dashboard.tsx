@@ -8,12 +8,14 @@ import { useToast } from '@/hooks/use-toast';
 import { SystemHealth, Mission, Flight } from '@/types';
 import { apiService } from '@/services/api';
 import { wsService } from '@/services/websocket';
-import LocationMap from '@/components/ui/LocationMap';
+import FlightMap from '@/components/ui/FlightMap';
 
 export function Dashboard() {
   const [health, setHealth] = useState<SystemHealth | null>(null);
   const [mission, setMission] = useState<Mission | null>(null);
   const [lastFlight, setLastFlight] = useState<Flight | null>(null);
+  const [flightPath, setFlightPath] = useState<any[]>([]);
+  const [homePosition, setHomePosition] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [missionLoading, setMissionLoading] = useState(false);
   const { toast } = useToast();
@@ -29,8 +31,20 @@ export function Dashboard() {
       }
     });
 
+    // Subscribe to indicators for position updates
+    const unsubscribeIndicators = wsService.onIndicators((data) => {
+      if (data.position) {
+        // Add to flight path if we have a position
+        setFlightPath(prev => [...prev.slice(-100), data.position]); // Keep last 100 points
+      }
+      if (data.home && data.home.set) {
+        setHomePosition(data.home);
+      }
+    });
+
     return () => {
       unsubscribeMission();
+      unsubscribeIndicators();
     };
   }, []);
 
@@ -260,30 +274,26 @@ export function Dashboard() {
           </CardContent>
         </Card>
 
-        {/* Location Map Card */}
+        {/* Flight Map Card */}
         <Card className="metric-card">
           <CardHeader>
-            <CardTitle>Current Location</CardTitle>
-            <CardDescription>System position and navigation</CardDescription>
+            <CardTitle>Flight Position</CardTitle>
+            <CardDescription>Real-time vehicle tracking and navigation</CardDescription>
           </CardHeader>
           <CardContent>
-            <LocationMap 
-              latitude={health?.latitude} 
-              longitude={health?.longitude}
-              className="w-full h-48"
+            <FlightMap 
+              currentPosition={health?.latitude && health?.longitude ? {
+                latitude: health.latitude,
+                longitude: health.longitude,
+                altitude: health.altitude || 0,
+                heading: health.heading || 0,
+                speed: health.speed || 0,
+                timestamp: health.timestamp
+              } : undefined}
+              homePosition={homePosition}
+              flightPath={flightPath}
+              className="w-full h-64"
             />
-            {health?.latitude && health?.longitude && (
-              <div className="mt-3 text-xs text-muted-foreground grid grid-cols-2 gap-2">
-                <div>
-                  <span className="metric-label">Latitude</span>
-                  <div className="font-mono text-sm">{health.latitude.toFixed(6)}</div>
-                </div>
-                <div>
-                  <span className="metric-label">Longitude</span>
-                  <div className="font-mono text-sm">{health.longitude.toFixed(6)}</div>
-                </div>
-              </div>
-            )}
           </CardContent>
         </Card>
       </div>
