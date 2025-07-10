@@ -8,8 +8,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { StatusBar } from "@/components/layout/StatusBar";
 import { AppSidebar } from "@/components/layout/AppSidebar";
 import { Dashboard } from "@/components/pages/Dashboard";
-import { LiveVideo } from "@/components/pages/LiveVideo";
-import { Missions } from "@/components/pages/Missions";
+import { Calibration } from "@/components/pages/Calibration";
 import { Login } from "@/components/pages/Login";
 import { wsService } from "@/services/websocket";
 import NotFound from "./pages/NotFound";
@@ -50,8 +49,7 @@ const App = () => (
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/" element={<AppLayout><Dashboard /></AppLayout>} />
-          <Route path="/video" element={<AppLayout><LiveVideo /></AppLayout>} />
-          <Route path="/missions" element={<AppLayout><Missions /></AppLayout>} />
+          <Route path="/calibration" element={<AppLayout><Calibration /></AppLayout>} />
           <Route path="/logs" element={<AppLayout><div className="p-6"><h1 className="text-2xl font-bold">Logs & Downloads</h1><p className="text-muted-foreground">Coming soon...</p></div></AppLayout>} />
           <Route path="/reports" element={<AppLayout><div className="p-6"><h1 className="text-2xl font-bold">Flight Reports</h1><p className="text-muted-foreground">Coming soon...</p></div></AppLayout>} />
           <Route path="/settings" element={<AppLayout><div className="p-6"><h1 className="text-2xl font-bold">Settings</h1><p className="text-muted-foreground">Coming soon...</p></div></AppLayout>} />
