@@ -3,26 +3,31 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
   Compass, 
-  Gauge, 
-  Navigation, 
+  Camera, 
+  Video, 
+  Play,
+  Square,
   RotateCcw, 
   CheckCircle, 
   XCircle,
   AlertTriangle,
-  Settings
+  Settings,
+  Crosshair
 } from 'lucide-react';
 
 export function Calibration() {
   const [calibrationStatus, setCalibrationStatus] = useState({
-    accelerometer: 'pending',
-    gyroscope: 'pending',
     magnetometer: 'pending',
-    barometer: 'pending'
+    boresight: 'pending',
+    camera: 'pending'
   });
   const [calibrationProgress, setCalibrationProgress] = useState(0);
   const [isCalibrating, setIsCalibrating] = useState(false);
+  const [activeTab, setActiveTab] = useState('magnetometer');
+  const [isStreaming, setIsStreaming] = useState(false);
 
   const startCalibration = (sensor: string) => {
     setIsCalibrating(true);
@@ -71,150 +76,259 @@ export function Calibration() {
     }
   };
 
-  const calibrationSensors = [
-    {
-      id: 'accelerometer',
-      name: 'Accelerometer',
-      description: 'Measures linear acceleration',
-      icon: Gauge,
-      status: calibrationStatus.accelerometer
-    },
-    {
-      id: 'gyroscope',
-      name: 'Gyroscope',
-      description: 'Measures angular velocity',
-      icon: RotateCcw,
-      status: calibrationStatus.gyroscope
-    },
+  const calibrationComponents = [
     {
       id: 'magnetometer',
       name: 'Magnetometer',
-      description: 'Measures magnetic field',
+      description: 'Magnetic field sensor calibration',
       icon: Compass,
       status: calibrationStatus.magnetometer
     },
     {
-      id: 'barometer',
-      name: 'Barometer',
-      description: 'Measures atmospheric pressure',
-      icon: Navigation,
-      status: calibrationStatus.barometer
+      id: 'boresight',
+      name: 'Boresight',
+      description: 'Camera alignment calibration',
+      icon: Crosshair,
+      status: calibrationStatus.boresight
+    },
+    {
+      id: 'camera',
+      name: 'Camera',
+      description: 'Camera intrinsic parameters',
+      icon: Camera,
+      status: calibrationStatus.camera
     }
   ];
+
+  const handleStreamToggle = () => {
+    setIsStreaming(!isStreaming);
+  };
 
   return (
     <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-foreground">Sensor Calibration</h1>
-          <p className="text-muted-foreground">Calibrate system sensors for optimal performance</p>
+          <h1 className="text-3xl font-bold text-foreground">Calibration Panel</h1>
+          <p className="text-muted-foreground">Magnetometer, Boresight, Camera, and Live Video Stream</p>
         </div>
       </div>
 
-      {/* Calibration Progress */}
-      {isCalibrating && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Calibration in Progress</CardTitle>
-            <CardDescription>Please follow the on-screen instructions</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <Progress value={calibrationProgress} className="w-full" />
-              <p className="text-sm text-muted-foreground text-center">
-                {calibrationProgress}% Complete
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-      )}
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="magnetometer">Magnetometer</TabsTrigger>
+          <TabsTrigger value="boresight">Boresight</TabsTrigger>
+          <TabsTrigger value="camera">Camera</TabsTrigger>
+          <TabsTrigger value="stream">Live Video</TabsTrigger>
+        </TabsList>
 
-      {/* Sensor Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {calibrationSensors.map((sensor) => {
-          const IconComponent = sensor.icon;
-          return (
-            <Card key={sensor.id} className="hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <CardTitle className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <IconComponent className="w-6 h-6 text-primary" />
-                    <span>{sensor.name}</span>
-                  </div>
-                  {getStatusIcon(sensor.status)}
-                </CardTitle>
-                <CardDescription>{sensor.description}</CardDescription>
-              </CardHeader>
-              <CardContent>
+        <TabsContent value="magnetometer" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-3">
+                <Compass className="w-6 h-6 text-primary" />
+                <span>Magnetometer Calibration</span>
+                {getStatusIcon(calibrationStatus.magnetometer)}
+              </CardTitle>
+              <CardDescription>Calibrate magnetic field sensor for accurate heading</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2">
                     <span className="text-sm font-medium">Status:</span>
-                    {getStatusBadge(sensor.status)}
+                    {getStatusBadge(calibrationStatus.magnetometer)}
                   </div>
                   <Button
-                    onClick={() => startCalibration(sensor.id)}
+                    onClick={() => startCalibration('magnetometer')}
                     disabled={isCalibrating}
-                    variant={sensor.status === 'completed' ? "outline" : "default"}
-                    size="sm"
+                    variant={calibrationStatus.magnetometer === 'completed' ? "outline" : "default"}
                   >
-                    {sensor.status === 'completed' ? 'Recalibrate' : 'Calibrate'}
+                    {calibrationStatus.magnetometer === 'completed' ? 'Recalibrate' : 'Start Calibration'}
                   </Button>
                 </div>
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
+                {isCalibrating && activeTab === 'magnetometer' && (
+                  <div className="space-y-2">
+                    <Progress value={calibrationProgress} className="w-full" />
+                    <p className="text-sm text-muted-foreground text-center">
+                      Rotate the device in figure-8 patterns - {calibrationProgress}% Complete
+                    </p>
+                  </div>
+                )}
+                <div className="p-4 bg-muted rounded-lg">
+                  <h4 className="font-semibold mb-2">Instructions:</h4>
+                  <ol className="text-sm text-muted-foreground space-y-1">
+                    <li>1. Move away from metal objects and electrical devices</li>
+                    <li>2. Hold the device firmly and rotate in figure-8 patterns</li>
+                    <li>3. Rotate around all three axes (X, Y, Z)</li>
+                    <li>4. Continue until calibration is complete</li>
+                  </ol>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
 
-      {/* Calibration Instructions */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Calibration Instructions</CardTitle>
-          <CardDescription>Follow these steps for accurate sensor calibration</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <h4 className="font-semibold flex items-center space-x-2">
-                  <Gauge className="w-4 h-4" />
-                  <span>Accelerometer</span>
-                </h4>
-                <p className="text-sm text-muted-foreground">
-                  Place the device on a level surface and keep it stationary during calibration.
-                </p>
+        <TabsContent value="boresight" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-3">
+                <Crosshair className="w-6 h-6 text-primary" />
+                <span>Boresight Calibration</span>
+                {getStatusIcon(calibrationStatus.boresight)}
+              </CardTitle>
+              <CardDescription>Align camera optical axis with vehicle reference frame</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <span className="text-sm font-medium">Status:</span>
+                    {getStatusBadge(calibrationStatus.boresight)}
+                  </div>
+                  <Button
+                    onClick={() => startCalibration('boresight')}
+                    disabled={isCalibrating}
+                    variant={calibrationStatus.boresight === 'completed' ? "outline" : "default"}
+                  >
+                    {calibrationStatus.boresight === 'completed' ? 'Recalibrate' : 'Start Calibration'}
+                  </Button>
+                </div>
+                {isCalibrating && activeTab === 'boresight' && (
+                  <div className="space-y-2">
+                    <Progress value={calibrationProgress} className="w-full" />
+                    <p className="text-sm text-muted-foreground text-center">
+                      Align camera with reference targets - {calibrationProgress}% Complete
+                    </p>
+                  </div>
+                )}
+                <div className="p-4 bg-muted rounded-lg">
+                  <h4 className="font-semibold mb-2">Instructions:</h4>
+                  <ol className="text-sm text-muted-foreground space-y-1">
+                    <li>1. Position vehicle at a known reference point</li>
+                    <li>2. Point camera at calibration targets</li>
+                    <li>3. Ensure targets are clearly visible in frame</li>
+                    <li>4. Follow on-screen alignment guides</li>
+                  </ol>
+                </div>
               </div>
-              <div className="space-y-2">
-                <h4 className="font-semibold flex items-center space-x-2">
-                  <RotateCcw className="w-4 h-4" />
-                  <span>Gyroscope</span>
-                </h4>
-                <p className="text-sm text-muted-foreground">
-                  Keep the device completely still. Do not move or vibrate during calibration.
-                </p>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="camera" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-3">
+                <Camera className="w-6 h-6 text-primary" />
+                <span>Camera Calibration</span>
+                {getStatusIcon(calibrationStatus.camera)}
+              </CardTitle>
+              <CardDescription>Calibrate camera intrinsic parameters and distortion</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <span className="text-sm font-medium">Status:</span>
+                    {getStatusBadge(calibrationStatus.camera)}
+                  </div>
+                  <Button
+                    onClick={() => startCalibration('camera')}
+                    disabled={isCalibrating}
+                    variant={calibrationStatus.camera === 'completed' ? "outline" : "default"}
+                  >
+                    {calibrationStatus.camera === 'completed' ? 'Recalibrate' : 'Start Calibration'}
+                  </Button>
+                </div>
+                {isCalibrating && activeTab === 'camera' && (
+                  <div className="space-y-2">
+                    <Progress value={calibrationProgress} className="w-full" />
+                    <p className="text-sm text-muted-foreground text-center">
+                      Capturing calibration images - {calibrationProgress}% Complete
+                    </p>
+                  </div>
+                )}
+                <div className="p-4 bg-muted rounded-lg">
+                  <h4 className="font-semibold mb-2">Instructions:</h4>
+                  <ol className="text-sm text-muted-foreground space-y-1">
+                    <li>1. Use a checkerboard calibration pattern</li>
+                    <li>2. Position pattern at various distances and angles</li>
+                    <li>3. Ensure pattern fills different areas of the frame</li>
+                    <li>4. Capture multiple images as instructed</li>
+                  </ol>
+                </div>
               </div>
-              <div className="space-y-2">
-                <h4 className="font-semibold flex items-center space-x-2">
-                  <Compass className="w-4 h-4" />
-                  <span>Magnetometer</span>
-                </h4>
-                <p className="text-sm text-muted-foreground">
-                  Rotate the device in figure-8 patterns away from metal objects.
-                </p>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="stream" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-3">
+                <Video className="w-6 h-6 text-primary" />
+                <span>Live Video Stream</span>
+              </CardTitle>
+              <CardDescription>Real-time video feed from camera</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <span className="text-sm font-medium">Stream Status:</span>
+                    <Badge variant={isStreaming ? "default" : "secondary"}>
+                      {isStreaming ? "Live" : "Offline"}
+                    </Badge>
+                  </div>
+                  <Button
+                    onClick={handleStreamToggle}
+                    variant={isStreaming ? "destructive" : "default"}
+                    className="flex items-center space-x-2"
+                  >
+                    {isStreaming ? <Square className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+                    <span>{isStreaming ? 'Stop Stream' : 'Start Stream'}</span>
+                  </Button>
+                </div>
+                
+                <div className="aspect-video bg-muted rounded-lg flex items-center justify-center">
+                  {isStreaming ? (
+                    <div className="text-center">
+                      <Video className="w-16 h-16 text-muted-foreground mx-auto mb-2" />
+                      <p className="text-muted-foreground">Live video feed would appear here</p>
+                      <p className="text-xs text-muted-foreground mt-1">Camera stream active</p>
+                    </div>
+                  ) : (
+                    <div className="text-center">
+                      <Camera className="w-16 h-16 text-muted-foreground mx-auto mb-2" />
+                      <p className="text-muted-foreground">Video stream is offline</p>
+                      <p className="text-xs text-muted-foreground mt-1">Click Start Stream to begin</p>
+                    </div>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-2 gap-4 text-sm">
+                  <div className="p-3 bg-muted rounded-lg">
+                    <div className="font-medium">Resolution</div>
+                    <div className="text-muted-foreground">1920x1080</div>
+                  </div>
+                  <div className="p-3 bg-muted rounded-lg">
+                    <div className="font-medium">Frame Rate</div>
+                    <div className="text-muted-foreground">30 FPS</div>
+                  </div>
+                  <div className="p-3 bg-muted rounded-lg">
+                    <div className="font-medium">Codec</div>
+                    <div className="text-muted-foreground">H.264</div>
+                  </div>
+                  <div className="p-3 bg-muted rounded-lg">
+                    <div className="font-medium">Bitrate</div>
+                    <div className="text-muted-foreground">5 Mbps</div>
+                  </div>
+                </div>
               </div>
-              <div className="space-y-2">
-                <h4 className="font-semibold flex items-center space-x-2">
-                  <Navigation className="w-4 h-4" />
-                  <span>Barometer</span>
-                </h4>
-                <p className="text-sm text-muted-foreground">
-                  Ensure stable environmental conditions during pressure calibration.
-                </p>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

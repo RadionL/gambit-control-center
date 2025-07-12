@@ -187,17 +187,30 @@ export function Dashboard() {
         <div className="flex items-center justify-between p-4">
           <div>
             <h1 className="text-xl font-bold text-foreground">Mission Control Dashboard</h1>
-            <p className="text-sm text-muted-foreground">Gambit Navigation System</p>
+            <p className="text-sm text-muted-foreground">User can update the starting point on this map</p>
           </div>
-          <Button
-            onClick={loadDashboardData}
-            variant="outline"
-            size="sm"
-            className="flex items-center space-x-2"
-          >
-            <RefreshCw className="w-4 h-4" />
-            <span>Refresh</span>
-          </Button>
+          <div className="flex space-x-2">
+            <Button
+              onClick={() => {
+                // Add logic to update starting point
+                console.log('Update starting point clicked');
+              }}
+              variant="default"
+              size="sm"
+              className="flex items-center space-x-2"
+            >
+              <span>Update Starting Point</span>
+            </Button>
+            <Button
+              onClick={loadDashboardData}
+              variant="outline"
+              size="sm"
+              className="flex items-center space-x-2"
+            >
+              <RefreshCw className="w-4 h-4" />
+              <span>Refresh</span>
+            </Button>
+          </div>
         </div>
       </div>
 

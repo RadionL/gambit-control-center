@@ -10,6 +10,9 @@ import { AppSidebar } from "@/components/layout/AppSidebar";
 import { Dashboard } from "@/components/pages/Dashboard";
 import { Calibration } from "@/components/pages/Calibration";
 import { Login } from "@/components/pages/Login";
+import { ManagedLogsAndMaps } from "@/components/pages/ManagedLogsAndMaps";
+import { FlightReports } from "@/components/pages/FlightReports";
+import { Settings } from "@/components/pages/Settings";
 import { wsService } from "@/services/websocket";
 import NotFound from "./pages/NotFound";
 
@@ -50,9 +53,9 @@ const App = () => (
           <Route path="/login" element={<Login />} />
           <Route path="/" element={<AppLayout><Dashboard /></AppLayout>} />
           <Route path="/calibration" element={<AppLayout><Calibration /></AppLayout>} />
-          <Route path="/logs" element={<AppLayout><div className="p-6"><h1 className="text-2xl font-bold">Logs & Downloads</h1><p className="text-muted-foreground">Coming soon...</p></div></AppLayout>} />
-          <Route path="/reports" element={<AppLayout><div className="p-6"><h1 className="text-2xl font-bold">Flight Reports</h1><p className="text-muted-foreground">Coming soon...</p></div></AppLayout>} />
-          <Route path="/settings" element={<AppLayout><div className="p-6"><h1 className="text-2xl font-bold">Settings</h1><p className="text-muted-foreground">Coming soon...</p></div></AppLayout>} />
+          <Route path="/logs" element={<AppLayout><ManagedLogsAndMaps /></AppLayout>} />
+          <Route path="/reports" element={<AppLayout><FlightReports /></AppLayout>} />
+          <Route path="/settings" element={<AppLayout><Settings /></AppLayout>} />
           <Route path="/upload" element={<AppLayout><div className="p-6"><h1 className="text-2xl font-bold">Firmware Upload</h1><p className="text-muted-foreground">Coming soon...</p></div></AppLayout>} />
           <Route path="*" element={<NotFound />} />
         </Routes>
