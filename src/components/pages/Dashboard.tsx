@@ -191,17 +191,6 @@ export function Dashboard() {
           </div>
           <div className="flex space-x-2">
             <Button
-              onClick={() => {
-                // Add logic to update starting point
-                console.log('Update starting point clicked');
-              }}
-              variant="default"
-              size="sm"
-              className="flex items-center space-x-2"
-            >
-              <span>Update Starting Point</span>
-            </Button>
-            <Button
               onClick={loadDashboardData}
               variant="outline"
               size="sm"
@@ -213,6 +202,53 @@ export function Dashboard() {
           </div>
         </div>
       </div>
+
+      {/* Coordinate Input Overlay - Bottom Left */}
+      <Card className="absolute bottom-4 left-4 z-10 bg-background/90 backdrop-blur-sm w-80">
+        <CardContent className="p-3">
+          <div className="space-y-2">
+            <div className="text-xs font-medium text-muted-foreground mb-2">Update Starting Point</div>
+            <div className="grid grid-cols-3 gap-2">
+              <div>
+                <label className="text-xs text-muted-foreground">Lat</label>
+                <input 
+                  type="number" 
+                  step="any"
+                  placeholder="0.000000"
+                  className="w-full text-xs px-2 py-1 bg-background border border-border rounded"
+                />
+              </div>
+              <div>
+                <label className="text-xs text-muted-foreground">Long</label>
+                <input 
+                  type="number" 
+                  step="any"
+                  placeholder="0.000000"
+                  className="w-full text-xs px-2 py-1 bg-background border border-border rounded"
+                />
+              </div>
+              <div>
+                <label className="text-xs text-muted-foreground">Alt</label>
+                <input 
+                  type="number" 
+                  step="any"
+                  placeholder="0"
+                  className="w-full text-xs px-2 py-1 bg-background border border-border rounded"
+                />
+              </div>
+            </div>
+            <Button
+              onClick={() => {
+                console.log('Update coordinates clicked');
+              }}
+              size="sm"
+              className="w-full text-xs h-7"
+            >
+              Update
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* System Health Overlay - Top Right */}
       <Card className="absolute top-24 right-4 z-10 bg-background/90 backdrop-blur-sm w-72">
