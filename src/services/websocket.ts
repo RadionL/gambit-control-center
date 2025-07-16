@@ -8,7 +8,7 @@ import {
   WSRecordDoneMessage 
 } from '@/types';
 
-const WS_BASE_URL = process.env.REACT_APP_WS_URL || 'ws://localhost:8000';
+const WS_BASE_URL = import.meta.env.VITE_WS_URL || 'ws://localhost:8000';
 const RECONNECT_INTERVAL = 5000; // 5 seconds
 
 type WSEventHandler<T = any> = (data: T) => void;
