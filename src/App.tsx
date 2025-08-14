@@ -34,9 +34,12 @@ function AppLayout({ children }: { children: React.ReactNode }) {
         <AppSidebar />
         <div className="flex-1 flex flex-col">
           <StatusBar />
-          <main className="flex-1 overflow-auto bg-background">
-            {children}
-          </main>
+          <div className="relative">
+            <SidebarTrigger className="absolute top-4 right-4 z-10 hover:bg-accent hover:text-accent-foreground p-2 rounded" />
+            <main className="flex-1 overflow-auto bg-background">
+              {children}
+            </main>
+          </div>
         </div>
       </div>
     </SidebarProvider>

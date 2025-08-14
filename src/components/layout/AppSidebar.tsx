@@ -111,11 +111,6 @@ export function AppSidebar() {
   return (
     <Sidebar className={collapsed ? 'w-16' : 'w-64'} collapsible="icon">
       <SidebarContent className="bg-sidebar border-r border-sidebar-border">
-        {/* Sidebar Toggle */}
-        <div className="p-2 border-b border-sidebar-border">
-          <SidebarTrigger className="w-full justify-start hover:bg-sidebar-accent/50 text-sidebar-foreground" />
-        </div>
-
         {/* Logo/Brand */}
         <div className="p-4 border-b border-sidebar-border">
           <div className="flex items-center space-x-3">
