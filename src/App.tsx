@@ -52,7 +52,7 @@ const App = () => (
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/" element={<AppLayout><Dashboard /></AppLayout>} />
-          <Route path="/missions" element={<AppLayout><Calibration /></AppLayout>} />
+          <Route path="/calibration" element={<AppLayout><Calibration /></AppLayout>} />
           <Route path="/logs" element={<AppLayout><ManagedLogsAndMaps /></AppLayout>} />
           <Route path="/reports" element={<AppLayout><FlightReports /></AppLayout>} />
           <Route path="/settings" element={<AppLayout><Settings /></AppLayout>} />
