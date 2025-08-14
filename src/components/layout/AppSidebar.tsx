@@ -36,10 +36,10 @@ const navigationItems: NavigationItem[] = [
     roles: ['operator', 'admin'],
   },
   {
-    id: 'missions',
-    label: 'Missions',
+    id: 'calibration',
+    label: 'Calibration',
     icon: 'Video',
-    path: '/missions',
+    path: '/calibration',
     roles: ['operator', 'admin'],
   },
   {
