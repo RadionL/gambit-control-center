@@ -9,7 +9,8 @@ import {
   FileText, 
   Settings, 
   Upload,
-  ChevronRight
+  ChevronRight,
+  Map
 } from 'lucide-react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { 
@@ -35,10 +36,10 @@ const navigationItems: NavigationItem[] = [
     roles: ['operator', 'admin'],
   },
   {
-    id: 'calibration',
-    label: 'Calibration',
+    id: 'missions',
+    label: 'Missions',
     icon: 'Video',
-    path: '/calibration',
+    path: '/missions',
     roles: ['operator', 'admin'],
   },
   {
@@ -56,17 +57,17 @@ const navigationItems: NavigationItem[] = [
     roles: ['operator', 'admin'],
   },
   {
+    id: 'maps',
+    label: 'Maps',
+    icon: 'Map',
+    path: '/maps',
+    roles: ['operator', 'admin'],
+  },
+  {
     id: 'settings',
     label: 'Settings',
     icon: 'Settings',
     path: '/settings',
-    roles: ['admin'],
-  },
-  {
-    id: 'upload',
-    label: 'Firmware Upload',
-    icon: 'Upload',
-    path: '/upload',
     roles: ['admin'],
   },
 ];
@@ -79,6 +80,7 @@ const iconMap = {
   FileText,
   Settings,
   Upload,
+  Map,
 };
 
 export function AppSidebar() {

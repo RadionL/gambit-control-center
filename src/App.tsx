@@ -52,11 +52,11 @@ const App = () => (
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/" element={<AppLayout><Dashboard /></AppLayout>} />
-          <Route path="/calibration" element={<AppLayout><Calibration /></AppLayout>} />
+          <Route path="/missions" element={<AppLayout><Calibration /></AppLayout>} />
           <Route path="/logs" element={<AppLayout><ManagedLogsAndMaps /></AppLayout>} />
           <Route path="/reports" element={<AppLayout><FlightReports /></AppLayout>} />
+          <Route path="/maps" element={<AppLayout><div className="p-6"><h1 className="text-2xl font-bold">Maps</h1><p className="text-muted-foreground">Coming soon...</p></div></AppLayout>} />
           <Route path="/settings" element={<AppLayout><Settings /></AppLayout>} />
-          <Route path="/upload" element={<AppLayout><div className="p-6"><h1 className="text-2xl font-bold">Firmware Upload</h1><p className="text-muted-foreground">Coming soon...</p></div></AppLayout>} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
