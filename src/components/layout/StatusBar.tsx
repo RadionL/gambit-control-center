@@ -1,10 +1,9 @@
 // Gambit Navigation System Status Bar
 
 import { useEffect, useState } from 'react';
-import { Wifi, WifiOff, Circle, Battery, HardDrive, Cpu, Thermometer, Video, Menu } from 'lucide-react';
+import { Wifi, WifiOff, Circle, Battery, HardDrive, Cpu, Thermometer, Video } from 'lucide-react';
 import { SystemIndicators } from '@/types';
 import { wsService } from '@/services/websocket';
-import { SidebarTrigger } from '@/components/ui/sidebar';
 
 export function StatusBar() {
   const [indicators, setIndicators] = useState<SystemIndicators>({
@@ -52,9 +51,6 @@ export function StatusBar() {
   return (
     <div className="h-12 bg-card border-b border-border flex items-center justify-between px-4 shadow-sm">
       <div className="flex items-center space-x-6">
-        {/* Sidebar Toggle */}
-        <SidebarTrigger className="hover:bg-accent hover:text-accent-foreground p-1 rounded" />
-        
         {/* Connection Status */}
         <div className="flex items-center space-x-2">
           {indicators.connected ? (
